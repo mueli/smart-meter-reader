@@ -1,0 +1,51 @@
+[global]
+debug_level = "DEBUG"
+mqtt_broker = 'mortar.derhammer.lan'
+mqtt_port = 1883
+
+# Dummy device
+[dummy]
+dynaconf_merge = true
+[dummy.client]
+id = "dummy"
+[dummy.sink]
+ids = ["homie"]
+[dummy.sink.homie]
+id = "dummy-smart-meter"
+name = "Dummy Device"
+device_type = "DummySmartMeter"
+
+# Sagemcom T210-D-r
+[t210]
+dynaconf_merge = true
+[t210.client]
+id = "sagemcom_T210_D_r"
+# guek = "<>"  # to be set in .secrets.toml
+# gak = "<>"  # to be set in .secrets.toml
+[t210.client.serial]
+port = "/dev/ttyS0" 
+# For raspberry Pi 2 "/dev/ttyACM0"
+settings = "SERIAL_SETTINGS_V5"
+[t210.client.kamstrup_403]
+telegram_specification = "V5"
+[t210.sink]
+ids = ["homie"]
+[t210.sink.homie]
+id = "electric-smart-meter"
+name = "Sagemcom T210-D-r Stromzähler"
+device_type = "ElectricSmartMeter"
+
+# Kamstrup 403
+[kamstrup_403]
+dynaconf_merge = true
+[kamstrup_403.client]
+id = "kamstrup_403"
+[kamstrup_403.client.serial]
+port = "/dev/tty.usbserial-00F2F635"
+[kamstrup_403.sink]
+ids = ["homie"]
+[kamstrup_403.sink.homie]
+id = "heat-smart-meter"
+name = "Kamstrup 403 Fernwärmezähler"
+device_type = "HeatSmartMeter"
+
