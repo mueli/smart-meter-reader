@@ -20,14 +20,13 @@ device_type = "DummySmartMeter"
 dynaconf_merge = true
 [t210.client]
 id = "sagemcom_T210_D_r"
+telegram_specification = "V5"
 # guek = "<>"  # to be set in .secrets.toml
 # gak = "<>"  # to be set in .secrets.toml
 [t210.client.serial]
 port = "/dev/ttyS0" 
 # For raspberry Pi 2 "/dev/ttyACM0"
 settings = "SERIAL_SETTINGS_V5"
-[t210.client.kamstrup_403]
-telegram_specification = "V5"
 [t210.sink]
 ids = ["homie"]
 [t210.sink.homie]

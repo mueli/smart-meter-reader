@@ -52,7 +52,7 @@ def _get_mapping(telegram_id: str) -> dict:
         if d['tid'] == telegram_id:
             return d
 
-    raise ValueError(f"Telegram ID '{telegram_id}' not defined in mapping to data")
+    return None
 
 
 def decrypt_message(encrypted_telegram: bytearray, init_vector: bytearray) -> str:
@@ -79,30 +79,42 @@ async def _get_message(aioserial_instance: aioserial.AioSerial, mb: BytestreamBu
 async def read_client(queue: asyncio.Queue) -> None:
     serial_settings = getattr(dsmr_settings, settings.client.serial.settings)
     serial_settings["port"] = settings.client.serial.port
+    serial_settings["loop"] = asyncio.get_running_loop()
     aios = aioserial.AioSerial(**serial_settings)
 
     logger.debug("Starting client main loop for Sagemcom T210-D-r client")
     while True:
         # We always start with an empty buffer
         mb = BytestreamBuffer()
-        await _get_message(aios, mb)
-        data = defaultdict(dict)
+        await _get_message(aios, mb)  
         if mb.current_state == BytestreamBuffer.States.RESULT:
+            data = defaultdict(dict)
             tg = decrypt_message(
                 mb.encrypted_telegram,
                 mb.system_title + mb.binary_frame_counter
             )
-            spec = getattr(telegram_specifications, settings.telegram_specification)
+            spec = getattr(
+                telegram_specifications, 
+                settings.client.telegram_specification
+            )
             parser = TelegramParser(spec)
             try:
                 t = Telegram(tg.decode('ASCII'), parser, spec)
-                for tid, value in t:
+                for tid, cosemobj in t:
                     mapping = _get_mapping(tid)
                     # TODO: We do not use the unit information ...
-                    data[mapping['node']][mapping['attribute']] = value
-                await queue.put(data)
-                logger.debug(f"{data}")
+                    if mapping == None:
+                        logger.warn(f"Telegram ID {tid} not mapped to queue data model")
+                    else:
+                        data[mapping['node']][mapping['attribute']] = cosemobj.value
             # TODO: we catch here any exception
             except BaseException as e:
-                print(e)
-                print("")
+                logger.error(e)
+                logger.error(" --> Continue to next message parsing loop")
+                continue
+            logger.debug(f"{data}")
+            await queue.put(data)
+        elif mb.current_state != BytestreamBuffer.States.STATE_INVALID:
+            logger.warn("Unable to parse message data ... continue to next message "
+                        "parsing loop")
+            continue

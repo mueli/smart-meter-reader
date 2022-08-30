@@ -3,9 +3,10 @@ Description="Reading smart meter values and publishing them"
 
 [Service]
 User=mueli
-WorkingDirectory=/home/%u/VCS/smart_meter_reader
+Environment="ENV_FOR_DYNACONF=%i"
+WorkingDirectory=/home/mueli/VCS/smart_meter_reader
 PIDFile=/var/run/smart_meter_reader/%i.pid
-ExecStart=ENV_FOR_DYNACONF=%i /home/%u/.local/bin/poetry run python3 -m smart_meter_reader
+ExecStart=/home/mueli/.local/bin/poetry run python3 -m smart_meter_reader
 Restart=always
 
 [Install]

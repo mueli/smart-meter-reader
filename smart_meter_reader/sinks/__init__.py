@@ -25,4 +25,6 @@ async def write_sink(queue: asyncio.Queue) -> None:
 
     while True:
         data = await queue.get()
+        print("RECEIVED DATA!")
+        print(data)
         homie_device.publish_data(data)
