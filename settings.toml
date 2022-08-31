@@ -40,7 +40,8 @@ dynaconf_merge = true
 [kamstrup_403.client]
 id = "kamstrup_403"
 [kamstrup_403.client.serial]
-port = "/dev/tty.usbserial-00F2F635"
+#port = "/dev/tty.usbserial-00F2F635"
+port = "/dev/ttyUSB0"
 [kamstrup_403.sink]
 ids = ["homie"]
 [kamstrup_403.sink.homie]
