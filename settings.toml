@@ -25,8 +25,9 @@ telegram_specification = "V5"
 # gak = "<>"  # to be set in .secrets.toml
 [t210.client.serial]
 # port = "/dev/ttyS0" 
+port = "/dev/ttyUSB1"
 # On Mac OS --> ls /dev/cu.*
-port = "/dev/cu.usbserial-AQ7INQFW"
+# port = "/dev/cu.usbserial-AQ7INQFW"
 # For raspberry Pi 2 "/dev/ttyACM0"
 settings = "SERIAL_SETTINGS_V5"
 [t210.sink]
