@@ -1,5 +1,5 @@
 [global]
-debug_level = "DEBUG"
+debug_level = "INFO"
 mqtt_broker = 'mortar.derhammer.lan'
 mqtt_port = 1883
 
@@ -24,7 +24,9 @@ telegram_specification = "V5"
 # guek = "<>"  # to be set in .secrets.toml
 # gak = "<>"  # to be set in .secrets.toml
 [t210.client.serial]
-port = "/dev/ttyS0" 
+# port = "/dev/ttyS0" 
+# On Mac OS --> ls /dev/cu.*
+port = "/dev/cu.usbserial-AQ7INQFW"
 # For raspberry Pi 2 "/dev/ttyACM0"
 settings = "SERIAL_SETTINGS_V5"
 [t210.sink]
